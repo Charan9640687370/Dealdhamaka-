@@ -1,65 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DealDhamaka</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DealDhamaka - Best Online Deals</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #0b0f26;
-      color: white;
-      text-align: center;
+      background-color: #f7f7f7;
     }
     header {
+      background-color: #111;
       padding: 20px;
+      text-align: center;
     }
     header img {
-      max-width: 150px;
+      width: 150px;
     }
-    h1 {
-      color: #ffd700;
+    nav {
+      background-color: #ff6600;
+      padding: 10px 0;
+      text-align: center;
     }
-    .product-card {
-      background-color: #1c2237;
-      margin: 30px auto;
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .hero {
+      padding: 40px;
+      text-align: center;
+      background: #fff;
+    }
+    .hero h1 {
+      color: #ff6600;
+      font-size: 36px;
+    }
+    .hero p {
+      font-size: 18px;
+      color: #333;
+    }
+    footer {
+      background-color: #222;
+      color: white;
+      text-align: center;
       padding: 20px;
-      max-width: 300px;
-      border-radius: 10px;
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-    }
-    .product-card img {
-      width: 100%;
-      border-radius: 5px;
-    }
-    .product-card h2 {
-      margin: 15px 0;
-    }
-    .buy-button {
-      background-color: #ffd700;
-      color: black;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    .buy-button:hover {
-      background-color: #e6c200;
+      margin-top: 40px;
     }
   </style>
 </head>
 <body>
+
+  <!-- Header with Logo -->
   <header>
-    <img src="your-logo.png" alt="DealDhamaka Logo" />
-    <h1>Welcome to DealDhamaka</h1>
+    <img src="https://yourdomain.com/images/dealdhamaka-logo.png" alt="DealDhamaka Logo">
   </header>
 
-  <div class="product-card">
-    <img src="lenovo-laptop.jpg" alt="Product 1" />
-    <h2>Lenovo Laptop</h2>
-    <button class="buy-button">Buy Now</button>
-  </div>
+  <!-- Navigation Bar -->
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Deals</a>
+    <a href="#">Categories</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Welcome to DealDhamaka!</h1>
+    <p>Find the best online deals, discounts, and offers in one place.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 DealDhamaka. All rights reserved.
+  </footer>
+
 </body>
 </html>
