@@ -15,6 +15,7 @@
       padding: 20px;
       box-shadow: 0 0 10px #ccc;
       border-radius: 10px;
+      display: none; /* Initially hidden */
     }
     input, textarea {
       width: 100%;
@@ -35,17 +36,9 @@
       background-color: #0056b3;
     }
   </style>
-  <script>
-    // 🔐 PASSWORD PROTECTION
-    const password = prompt("Enter Admin Password:");
-    if (password !== "dealdhamaka123") {
-      alert("Access Denied");
-      window.location.href = "https://charan9640687370.github.io/Dealdhamaka-/";
-    }
-  </script>
 </head>
 <body>
-  <div class="admin-box">
+  <div class="admin-box" id="adminPanel">
     <h2>Admin Panel - DealDhamaka</h2>
     <input type="text" placeholder="Product Name" />
     <input type="text" placeholder="Product Image URL" />
@@ -54,5 +47,16 @@
     <input type="text" placeholder="Affiliate Link" />
     <button>Add Product</button>
   </div>
+
+  <script>
+    // 🔐 PASSWORD PROTECTION
+    const password = prompt("Enter Admin Password:");
+    if (password === "dealdhamaka123") {
+      document.getElementById("adminPanel").style.display = "block";
+    } else {
+      alert("❌ Access Denied!");
+      window.location.href = "https://charan9640687370.github.io/Dealdhamaka-/";
+    }
+  </script>
 </body>
 </html>
