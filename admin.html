@@ -1,94 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Admin Panel - DealDhamaka</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f0f0f0;
       padding: 20px;
     }
-    #login, #adminPanel {
-      background: white;
-      padding: 20px;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border-radius: 10px;
+    #productForm {
+      display: none;
+      margin-top: 20px;
     }
-    input, textarea, button {
+    input, textarea {
+      display: block;
       width: 100%;
-      margin-top: 10px;
-      padding: 10px;
-      font-size: 16px;
+      margin-bottom: 10px;
+      padding: 8px;
     }
     button {
-      background: #e91e63;
+      padding: 10px 20px;
+      background-color: #ff4d4d;
       color: white;
       border: none;
       cursor: pointer;
+    }
+    button:hover {
+      background-color: #e60000;
     }
   </style>
 </head>
 <body>
 
-<div id="login">
-  <h2>Admin Login</h2>
-  <input type="password" id="password" placeholder="Enter Admin Password">
-  <button onclick="checkPassword()">Login</button>
-</div>
+  <h2>🔒 Admin Panel - DealDhamaka</h2>
 
-<div id="adminPanel" style="display: none;">
-  <h2>Admin Panel - DealDhamaka</h2>
+  <button onclick="toggleForm()">➕ Add Product</button>
 
-  <input type="text" id="productName" placeholder="Product Name">
-  <input type="text" id="productImage" placeholder="Product Image URL">
-  <input type="text" id="productPrice" placeholder="Product Price">
-  <input type="text" id="productDiscount" placeholder="Discount (%)">
-  <textarea id="productDescription" placeholder="Product Description"></textarea>
-  <input type="text" id="affiliateLink" placeholder="Affiliate Link">
-  <input type="text" id="bannerUrl" placeholder="Banner Image URL">
+  <div id="productForm">
+    <h3>🛒 Add New Product</h3>
+    <form id="addProductForm">
+      <input type="text" placeholder="Product Name" required>
+      <textarea placeholder="Product Description" required></textarea>
+      <input type="text" placeholder="Product Price" required>
+      <input type="text" placeholder="Discount %" required>
+      <input type="url" placeholder="Affiliate Link" required>
+      <input type="url" placeholder="Product Image URL" required>
+      <button type="submit">Submit Product</button>
+    </form>
+  </div>
 
-  <button onclick="submitProduct()">Submit Product</button>
-
-  <p id="output"></p>
-</div>
-
-<script>
-  const correctPassword = "charancherry@09/09/2007"; // <== ఇక్కడే మీరు మీ password మార్చాలి
-
-  function checkPassword() {
-    const entered = document.getElementById('password').value;
-    if (entered === correctPassword) {
-      document.getElementById('login').style.display = "none";
-      document.getElementById('adminPanel').style.display = "block";
-    } else {
-      alert("❌ Incorrect Password!");
+  <script>
+    function toggleForm() {
+      const form = document.getElementById('productForm');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
     }
-  }
 
-  function submitProduct() {
-    const name = document.getElementById('productName').value;
-    const image = document.getElementById('productImage').value;
-    const price = document.getElementById('productPrice').value;
-    const discount = document.getElementById('productDiscount').value;
-    const desc = document.getElementById('productDescription').value;
-    const link = document.getElementById('affiliateLink').value;
-    const banner = document.getElementById('bannerUrl').value;
-
-    // For now, just show entered data (you can connect to Firebase / Google Sheets later)
-    document.getElementById('output').innerHTML = `
-      ✅ Product Submitted!<br><br>
-      <strong>Name:</strong> ${name}<br>
-      <strong>Image:</strong> <img src="${image}" width="100"><br>
-      <strong>Price:</strong> ₹${price}<br>
-      <strong>Discount:</strong> ${discount}%<br>
-      <strong>Description:</strong> ${desc}<br>
-      <strong>Affiliate Link:</strong> <a href="${link}" target="_blank">Buy Now</a><br>
-      <strong>Banner:</strong> <img src="${banner}" width="200"><br>
-    `;
-  }
-</script>
+    // (Optional) Handle form submission
+    document.getElementById('addProductForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      alert("Product added (you can connect this to your backend or spreadsheet).");
+      this.reset();
+    });
+  </script>
 
 </body>
 </html>
