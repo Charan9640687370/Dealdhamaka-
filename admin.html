@@ -1,136 +1,140 @@
-<!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DealDhamaka Admin Panel</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f0f0f0; }
-    .login, .admin-panel { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    .hidden { display: none; }
-    h2 { color: #333; }
-    input, button, textarea { display: block; width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
-    button { background: #007bff; color: white; border: none; cursor: pointer; }
-    button:hover { background: #0056b3; }
-    .product-card { background: #fff; margin-top: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
-    .product-card img { max-width: 100px; height: auto; display: block; margin-bottom: 10px; }
-    .card-actions { display: flex; gap: 10px; }
-    .card-actions button { flex: 1; }
-  </style>
-</head>
-<body>
-  <div class="login">
-    <h2>Admin Login</h2>
-    <input type="password" id="adminPassword" placeholder="Enter Admin Password" />
-    <button onclick="login()">Login</button>
-  </div>  <div class="admin-panel hidden">
-    <h2>Admin Panel</h2><button onclick="showAddProductForm()">Add Product</button>
-<button onclick="showAddBannerForm()">Add Banner</button>
-<button onclick="showCustomers()">Customers</button>
-<button onclick="showComplaints()">Complaints</button>
+// DealDhamaka Admin Panel - Full Features with Image Upload
 
-<div id="addProductForm" class="hidden">
-  <h3>Add Product</h3>
-  <input type="text" id="productName" placeholder="Product Name" />
-  <input type="text" id="productImageUrl" placeholder="Image URL" />
-  <input type="text" id="productDiscount" placeholder="Discount (e.g. 25%)" />
-  <textarea id="productDetails" placeholder="Product Details"></textarea>
-  <button onclick="addProduct()">Save Product</button>
-</div>
+import java.io.; import java.util.; import javax.servlet.; import javax.servlet.annotation.MultipartConfig; import javax.servlet.http.;
 
-<div id="addBannerForm" class="hidden">
-  <h3>Add Banner</h3>
-  <input type="text" id="bannerUrl" placeholder="Enter Banner Image URL" />
-  <button onclick="addBanner()">Save Banner</button>
-</div>
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5) public class AdminPanel extends HttpServlet { private static final String PASSWORD = "admin123"; private static final List<Map<String, String>> products = new ArrayList<>(); private static final List<String> customers = new ArrayList<>(); private static final List<Map<String, String>> complaints = new ArrayList<>(); private static final List<String> banners = new ArrayList<>();
 
-<div id="productList"></div>
-<div id="customerList" class="hidden"></div>
-<div id="complaintList" class="hidden"></div>
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    request.setCharacterEncoding("UTF-8");
+    String action = request.getParameter("action");
 
-  </div>  <script>
-    let password = "charancherry@09/09/2007"; // Change your password here
-    let products = [];
+    switch (action) {
+        case "login":
+            String password = request.getParameter("password");
+            if (PASSWORD.equals(password)) {
+                request.getSession().setAttribute("admin", true);
+            }
+            break;
+        case "logout":
+            request.getSession().invalidate();
+            break;
+        case "addProduct":
+            String name = request.getParameter("productName");
+            String price = request.getParameter("productPrice");
+            String desc = request.getParameter("productDescription");
+            String link = request.getParameter("productLink");
+            String discount = request.getParameter("productDiscount");
+            Part imagePart = request.getPart("productImage");
+            String imageName = System.currentTimeMillis() + "_" + imagePart.getSubmittedFileName();
+            String imagePath = getServletContext().getRealPath("/uploads/") + imageName;
+            imagePart.write(imagePath);
 
-    function login() {
-      const input = document.getElementById("adminPassword").value;
-      if (input === password) {
-        document.querySelector(".login").classList.add("hidden");
-        document.querySelector(".admin-panel").classList.remove("hidden");
-        showProducts();
-      } else {
-        alert("Wrong password");
-      }
+            Map<String, String> product = new HashMap<>();
+            product.put("name", name);
+            product.put("price", price);
+            product.put("description", desc);
+            product.put("link", link);
+            product.put("discount", discount);
+            product.put("image", "uploads/" + imageName);
+            products.add(product);
+            break;
+        case "deleteProduct":
+            int delIndex = Integer.parseInt(request.getParameter("index"));
+            if (delIndex >= 0 && delIndex < products.size()) {
+                products.remove(delIndex);
+            }
+            break;
+        case "editProduct":
+            int editIndex = Integer.parseInt(request.getParameter("index"));
+            if (editIndex >= 0 && editIndex < products.size()) {
+                Map<String, String> p = products.get(editIndex);
+                p.put("name", request.getParameter("productName"));
+                p.put("price", request.getParameter("productPrice"));
+                p.put("description", request.getParameter("productDescription"));
+                p.put("link", request.getParameter("productLink"));
+                p.put("discount", request.getParameter("productDiscount"));
+                Part newImage = request.getPart("productImage");
+                if (newImage.getSize() > 0) {
+                    String newImageName = System.currentTimeMillis() + "_" + newImage.getSubmittedFileName();
+                    String newImagePath = getServletContext().getRealPath("/uploads/") + newImageName;
+                    newImage.write(newImagePath);
+                    p.put("image", "uploads/" + newImageName);
+                }
+            }
+            break;
+        case "addBanner":
+            String bannerUrl = request.getParameter("bannerUrl");
+            banners.add(bannerUrl);
+            break;
+        case "addComplaint":
+            Map<String, String> complaint = new HashMap<>();
+            complaint.put("user", request.getParameter("user"));
+            complaint.put("message", request.getParameter("message"));
+            complaints.add(complaint);
+            break;
+        case "replyComplaint":
+            int compIndex = Integer.parseInt(request.getParameter("index"));
+            if (compIndex >= 0 && compIndex < complaints.size()) {
+                complaints.get(compIndex).put("reply", request.getParameter("reply"));
+            }
+            break;
+    }
+    response.sendRedirect("admin.jsp");
+}
+
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    PrintWriter out = response.getWriter();
+
+    HttpSession session = request.getSession();
+    if (session.getAttribute("admin") == null) {
+        out.println("<form method='post'>");
+        out.println("<h2>Admin Login</h2>");
+        out.println("<input type='password' name='password' placeholder='Enter Admin Password' required />");
+        out.println("<input type='hidden' name='action' value='login' />");
+        out.println("<button type='submit'>Login</button>");
+        out.println("</form>");
+        return;
     }
 
-    function showAddProductForm() {
-      document.getElementById("addProductForm").classList.toggle("hidden");
-    }
+    out.println("<h1>Welcome to DealDhamaka Admin Panel</h1>");
+    out.println("<form method='post'><button name='action' value='logout'>Logout</button></form>");
 
-    function showAddBannerForm() {
-      document.getElementById("addBannerForm").classList.toggle("hidden");
-    }
+    // Add Product Section
+    out.println("<h2>Add Product</h2>");
+    out.println("<form method='post' enctype='multipart/form-data'>");
+    out.println("<input name='productName' placeholder='Product Name' required /><br>");
+    out.println("<input type='file' name='productImage' accept='image/*' required /><br>");
+    out.println("<input name='productPrice' placeholder='Price' required /><br>");
+    out.println("<input name='productDiscount' placeholder='Discount (%)' /><br>");
+    out.println("<textarea name='productDescription' placeholder='Description'></textarea><br>");
+    out.println("<input name='productLink' placeholder='Affiliate Link' /><br>");
+    out.println("<input type='hidden' name='action' value='addProduct' />");
+    out.println("<button type='submit'>Submit</button>");
+    out.println("</form>");
 
-    function addProduct() {
-      const name = document.getElementById("productName").value;
-      const image = document.getElementById("productImageUrl").value;
-      const discount = document.getElementById("productDiscount").value;
-      const details = document.getElementById("productDetails").value;
-      const product = { name, image, discount, details };
-      products.push(product);
-      showProducts();
-      document.getElementById("addProductForm").classList.add("hidden");
+    // Display Products
+    out.println("<h2>Products</h2>");
+    for (int i = 0; i < products.size(); i++) {
+        Map<String, String> p = products.get(i);
+        out.println("<div style='border:1px solid #ccc; padding:10px; margin:10px;'>");
+        out.println("<img src='" + p.get("image") + "' width='100' /><br>");
+        out.println("<strong>Name:</strong> " + p.get("name") + "<br>");
+        out.println("<strong>Price:</strong> ₹" + p.get("price") + "<br>");
+        out.println("<strong>Discount:</strong> " + p.get("discount") + "%<br>");
+        out.println("<strong>Description:</strong> " + p.get("description") + "<br>");
+        out.println("<a href='" + p.get("link") + "' target='_blank'>Buy Now</a><br>");
+        out.println("<form method='post' enctype='multipart/form-data'>");
+        out.println("<input type='hidden' name='index' value='" + i + "' />");
+        out.println("<input type='hidden' name='action' value='deleteProduct' />");
+        out.println("<button type='submit'>Delete the Product</button>");
+        out.println("</form>");
+        out.println("</div>");
     }
+}
 
-    function showProducts() {
-      const list = document.getElementById("productList");
-      list.innerHTML = "";
-      products.forEach((product, index) => {
-        const div = document.createElement("div");
-        div.className = "product-card";
-        div.innerHTML = `
-          <h4>${product.name}</h4>
-          <img src="${product.image}" alt="Product Image">
-          <p><strong>Discount:</strong> ${product.discount}</p>
-          <p>${product.details}</p>
-          <div class="card-actions">
-            <button onclick="editProduct(${index})">Edit</button>
-            <button onclick="deleteProduct(${index})">Delete Product</button>
-          </div>
-        `;
-        list.appendChild(div);
-      });
-    }
+}
 
-    function editProduct(index) {
-      const product = products[index];
-      document.getElementById("productName").value = product.name;
-      document.getElementById("productImageUrl").value = product.image;
-      document.getElementById("productDiscount").value = product.discount;
-      document.getElementById("productDetails").value = product.details;
-      deleteProduct(index);
-      document.getElementById("addProductForm").classList.remove("hidden");
-    }
-
-    function deleteProduct(index) {
-      products.splice(index, 1);
-      showProducts();
-    }
-
-    function showCustomers() {
-      const div = document.getElementById("customerList");
-      div.classList.toggle("hidden");
-      div.innerHTML = "<h3>Total Customers: 0</h3>"; // Placeholder
-    }
-
-    function showComplaints() {
-      const div = document.getElementById("complaintList");
-      div.classList.toggle("hidden");
-      div.innerHTML = `<h3>Complaints</h3><p>No complaints yet.</p>`; // Placeholder
-    }
-
-    function addBanner() {
-      const banner = document.getElementById("bannerUrl").value;
-      alert("Banner added: " + banner);
-    }
-  </script></body>
-</html>
+      
