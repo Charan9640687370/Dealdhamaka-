@@ -1,140 +1,114 @@
-// DealDhamaka Admin Panel - Full Features with Image Upload
-
-import java.io.; import java.util.; import javax.servlet.; import javax.servlet.annotation.MultipartConfig; import javax.servlet.http.;
-
-@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5) public class AdminPanel extends HttpServlet { private static final String PASSWORD = "admin123"; private static final List<Map<String, String>> products = new ArrayList<>(); private static final List<String> customers = new ArrayList<>(); private static final List<Map<String, String>> complaints = new ArrayList<>(); private static final List<String> banners = new ArrayList<>();
-
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    String action = request.getParameter("action");
-
-    switch (action) {
-        case "login":
-            String password = request.getParameter("password");
-            if (PASSWORD.equals(password)) {
-                request.getSession().setAttribute("admin", true);
-            }
-            break;
-        case "logout":
-            request.getSession().invalidate();
-            break;
-        case "addProduct":
-            String name = request.getParameter("productName");
-            String price = request.getParameter("productPrice");
-            String desc = request.getParameter("productDescription");
-            String link = request.getParameter("productLink");
-            String discount = request.getParameter("productDiscount");
-            Part imagePart = request.getPart("productImage");
-            String imageName = System.currentTimeMillis() + "_" + imagePart.getSubmittedFileName();
-            String imagePath = getServletContext().getRealPath("/uploads/") + imageName;
-            imagePart.write(imagePath);
-
-            Map<String, String> product = new HashMap<>();
-            product.put("name", name);
-            product.put("price", price);
-            product.put("description", desc);
-            product.put("link", link);
-            product.put("discount", discount);
-            product.put("image", "uploads/" + imageName);
-            products.add(product);
-            break;
-        case "deleteProduct":
-            int delIndex = Integer.parseInt(request.getParameter("index"));
-            if (delIndex >= 0 && delIndex < products.size()) {
-                products.remove(delIndex);
-            }
-            break;
-        case "editProduct":
-            int editIndex = Integer.parseInt(request.getParameter("index"));
-            if (editIndex >= 0 && editIndex < products.size()) {
-                Map<String, String> p = products.get(editIndex);
-                p.put("name", request.getParameter("productName"));
-                p.put("price", request.getParameter("productPrice"));
-                p.put("description", request.getParameter("productDescription"));
-                p.put("link", request.getParameter("productLink"));
-                p.put("discount", request.getParameter("productDiscount"));
-                Part newImage = request.getPart("productImage");
-                if (newImage.getSize() > 0) {
-                    String newImageName = System.currentTimeMillis() + "_" + newImage.getSubmittedFileName();
-                    String newImagePath = getServletContext().getRealPath("/uploads/") + newImageName;
-                    newImage.write(newImagePath);
-                    p.put("image", "uploads/" + newImageName);
-                }
-            }
-            break;
-        case "addBanner":
-            String bannerUrl = request.getParameter("bannerUrl");
-            banners.add(bannerUrl);
-            break;
-        case "addComplaint":
-            Map<String, String> complaint = new HashMap<>();
-            complaint.put("user", request.getParameter("user"));
-            complaint.put("message", request.getParameter("message"));
-            complaints.add(complaint);
-            break;
-        case "replyComplaint":
-            int compIndex = Integer.parseInt(request.getParameter("index"));
-            if (compIndex >= 0 && compIndex < complaints.size()) {
-                complaints.get(compIndex).put("reply", request.getParameter("reply"));
-            }
-            break;
-    }
-    response.sendRedirect("admin.jsp");
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DealDhamaka Admin Panel</title>
+  <script>
+    const PASSWORD = "dealdhamaka2025"; // మీ పాస్‌వర్డ్ ఇక్కడfunction login() {
+  const input = document.getElementById("password").value;
+  if (input === PASSWORD) {
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("admin-panel").style.display = "block";
+  } else {
+    alert("Incorrect password");
+  }
 }
 
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    response.setContentType("text/html;charset=UTF-8");
-    PrintWriter out = response.getWriter();
+  </script>
+</head><body>
+  <div id="login-section">
+    <h2>Admin Login</h2>
+    <input type="password" id="password" placeholder="Enter Admin Password">
+    <button onclick="login()">Login</button>
+  </div>  <div id="admin-panel" style="display: none">
+    <h1>Welcome to DealDhamaka Admin Panel</h1><h3>Add Product</h3>
+<input type="text" id="product-name" placeholder="Product Name">
+<input type="file" id="product-image">
+<input type="text" id="product-price" placeholder="Price">
+<input type="text" id="product-discount" placeholder="Discount %">
+<button onclick="addProduct()">Add Product</button>
 
-    HttpSession session = request.getSession();
-    if (session.getAttribute("admin") == null) {
-        out.println("<form method='post'>");
-        out.println("<h2>Admin Login</h2>");
-        out.println("<input type='password' name='password' placeholder='Enter Admin Password' required />");
-        out.println("<input type='hidden' name='action' value='login' />");
-        out.println("<button type='submit'>Login</button>");
-        out.println("</form>");
-        return;
+<h3>Upload Banner</h3>
+<input type="file" id="banner-image">
+<button onclick="uploadBanner()">Upload Banner</button>
+
+<h3>Customers</h3>
+<button onclick="showCustomers()">View Customers</button>
+<div id="customer-list"></div>
+
+<h3>Complaints</h3>
+<button onclick="showComplaints()">View Complaints</button>
+<div id="complaints-section"></div>
+
+  </div>  <script>
+    function addProduct() {
+      const name = document.getElementById("product-name").value;
+      const imageFile = document.getElementById("product-image").files[0];
+      const price = document.getElementById("product-price").value;
+      const discount = document.getElementById("product-discount").value;
+
+      if (name && imageFile && price && discount) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const imageUrl = e.target.result;
+          const productHTML = `
+            <div class="product">
+              <img src="${imageUrl}" alt="Product Image" width="100">
+              <h4>${name}</h4>
+              <p>Price: ₹${price}</p>
+              <p>Discount: ${discount}%</p>
+              <button onclick="editProduct(this)">Edit</button>
+              <button onclick="deleteProduct(this)">Delete</button>
+            </div>
+          `;
+          document.body.insertAdjacentHTML("beforeend", productHTML);
+        }
+        reader.readAsDataURL(imageFile);
+      } else {
+        alert("Please fill all fields.");
+      }
     }
 
-    out.println("<h1>Welcome to DealDhamaka Admin Panel</h1>");
-    out.println("<form method='post'><button name='action' value='logout'>Logout</button></form>");
-
-    // Add Product Section
-    out.println("<h2>Add Product</h2>");
-    out.println("<form method='post' enctype='multipart/form-data'>");
-    out.println("<input name='productName' placeholder='Product Name' required /><br>");
-    out.println("<input type='file' name='productImage' accept='image/*' required /><br>");
-    out.println("<input name='productPrice' placeholder='Price' required /><br>");
-    out.println("<input name='productDiscount' placeholder='Discount (%)' /><br>");
-    out.println("<textarea name='productDescription' placeholder='Description'></textarea><br>");
-    out.println("<input name='productLink' placeholder='Affiliate Link' /><br>");
-    out.println("<input type='hidden' name='action' value='addProduct' />");
-    out.println("<button type='submit'>Submit</button>");
-    out.println("</form>");
-
-    // Display Products
-    out.println("<h2>Products</h2>");
-    for (int i = 0; i < products.size(); i++) {
-        Map<String, String> p = products.get(i);
-        out.println("<div style='border:1px solid #ccc; padding:10px; margin:10px;'>");
-        out.println("<img src='" + p.get("image") + "' width='100' /><br>");
-        out.println("<strong>Name:</strong> " + p.get("name") + "<br>");
-        out.println("<strong>Price:</strong> ₹" + p.get("price") + "<br>");
-        out.println("<strong>Discount:</strong> " + p.get("discount") + "%<br>");
-        out.println("<strong>Description:</strong> " + p.get("description") + "<br>");
-        out.println("<a href='" + p.get("link") + "' target='_blank'>Buy Now</a><br>");
-        out.println("<form method='post' enctype='multipart/form-data'>");
-        out.println("<input type='hidden' name='index' value='" + i + "' />");
-        out.println("<input type='hidden' name='action' value='deleteProduct' />");
-        out.println("<button type='submit'>Delete the Product</button>");
-        out.println("</form>");
-        out.println("</div>");
+    function editProduct(button) {
+      alert("Edit functionality to be implemented.");
     }
+
+    function deleteProduct(button) {
+      button.parentElement.remove();
+    }
+
+    function uploadBanner() {
+      const bannerFile = document.getElementById("banner-image").files[0];
+      if (bannerFile) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const bannerUrl = e.target.result;
+          const bannerHTML = `<img src="${bannerUrl}" alt="Banner" width="300">`;
+          document.body.insertAdjacentHTML("afterbegin", bannerHTML);
+        }
+        reader.readAsDataURL(bannerFile);
+      }
+    }
+
+    function showCustomers() {
+      const customers = ["customer1@example.com", "customer2@example.com"];
+      const container = document.getElementById("customer-list");
+      container.innerHTML = customers.map(c => `<p>${c}</p>`).join('');
+    }
+
+    function showComplaints() {
+      const complaints = [
+        { email: "cust1@example.com", issue: "Product not delivered" },
+        { email: "cust2@example.com", issue: "Damaged product" }
+      ];
+      const section = document.getElementById("complaints-section");
+      section.innerHTML = complaints.map(c => `
+        <div>
+          <p><strong>${c.email}</strong>: ${c.issue}</p>
+          <textarea placeholder="Reply here..."></textarea><button>Send Reply</button>
+    </div>
+  `).join('');
 }
 
-}
-
-      
+  </script>
+</body>
+</html>
