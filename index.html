@@ -33,22 +33,37 @@
       display: flex;
       align-items: center;
       background-color: white;
-      border-radius: 5px;
+      border-radius: 25px;
       overflow: hidden;
-      padding: 2px;
+      padding: 2px 8px;
     }
     .search-bar input {
       border: none;
-      padding: 6px;
+      padding: 6px 10px;
       outline: none;
       width: 200px;
+      font-size: 16px;
     }
     .search-bar button {
       border: none;
       background: none;
-      font-size: 20px;
       cursor: pointer;
+    }
+    .mic-button {
+      background-color: white;
+      border-radius: 50%;
       padding: 5px;
+      margin-left: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+    .mic-button img {
+      height: 24px;
+      width: 24px;
+    }
+    .search-icon {
+      font-size: 20px;
+      color: #333;
+      margin-left: 8px;
     }
   </style>
 </head>
@@ -61,8 +76,10 @@
       <span>❤️ Like</span>
       <div class="search-bar">
         <input type="text" id="searchInput" placeholder="Search...">
-        <button onclick="startVoiceSearch()">🎤</button>
-        <button onclick="searchNow()">🔍</button>
+        <button class="mic-button" onclick="startVoiceSearch()">
+          <img src="https://www.gstatic.com/images/icons/material/system/2x/mic_black_24dp.png" alt="Mic">
+        </button>
+        <button onclick="searchNow()" class="search-icon">🔍</button>
       </div>
       <span>⋮</span>
     </div>
@@ -81,7 +98,7 @@
 
     function searchNow() {
       const query = document.getElementById('searchInput').value;
-      alert("You searched: " + query); // You can redirect or show results here
+      alert("You searched: " + query); // Use this to show real search results
     }
   </script>
 </body>
