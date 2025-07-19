@@ -1,58 +1,65 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DealDhamaka Admin Panel</title>
+  <title>Admin Panel - DealDhamaka</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; }
-    header { background: #000; color: #fff; padding: 1rem; text-align: center; }
-    .admin-panel {
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    .admin-form {
       max-width: 600px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     input, textarea, button {
       width: 100%;
-      margin-bottom: 1rem;
-      padding: 0.75rem;
-      border-radius: 5px;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
       border: 1px solid #ccc;
+      font-size: 16px;
     }
-    label { font-weight: bold; }
+    #content { display: none; }
   </style>
 </head>
-<body><header>
-  <h1>DealDhamaka Admin Panel</h1>
-</header><div class="admin-panel">
-  <h2>Product Upload</h2>
-  <form id="productForm">
-    <label for="productName">Product Name</label>
-    <input type="text" id="productName" name="productName" placeholder="Enter product name"><label for="productImage">Product Image Link</label>
-<input type="url" id="productImage" name="productImage" placeholder="https://example.com/image.jpg">
+<body>
 
-<label for="productLink">Product Buy Link</label>
-<input type="url" id="productLink" name="productLink" placeholder="https://example.com/buy">
-
-<label for="productDesc">Product Description</label>
-<textarea id="productDesc" name="productDesc" placeholder="Enter product details here..."></textarea>
-
-<button type="submit">Upload Product</button>
-
-  </form>
-</div><script>
-  // Basic authentication for admin
+<script>
   const password = prompt("Enter admin password:");
-  if (password !== "YourSecretPassword") {
-    document.body.innerHTML = "<h2 style='text-align:center;color:red;'>Access Denied</h2>";
+  if (password === "MySecret123") {
+    document.getElementById("content").style.display = "block";
+  } else {
+    alert("Access Denied");
+    window.location.href = "/";
   }
+</script>
 
-  // Handle form submission
-  document.getElementById("productForm")?.addEventListener("submit", function(event) {
-    event.preventDefault();
-    alert("Product uploaded (dummy function). Connect backend to save data.");
-  });
-</script></body>
+<div id="content">
+  <div class="admin-form">
+    <h2>🛠️ Add New Product to DealDhamaka</h2>
+    <form>
+      <label>Product Name:</label>
+      <input type="text" placeholder="e.g. Redgear Gaming Mouse">
+
+      <label>Image URL:</label>
+      <input type="text" placeholder="https://example.com/image.jpg">
+
+      <label>Affiliate Link:</label>
+      <input type="text" placeholder="https://flipkart.com/your-affiliate-link">
+
+      <label>Product Description:</label>
+      <textarea rows="4" placeholder="Write a short description..."></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</div>
+
+</body>
 </html>
