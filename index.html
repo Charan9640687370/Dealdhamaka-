@@ -3,37 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <title>DealDhamaka</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,700&display=swap" rel="stylesheet">
   <style>
-    body {
-      background-color: #0d1b2a;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-    .logo-container {
-      text-align: center;
-    }
-    .logo-container img {
-      max-width: 300px;
-      height: auto;
-      margin-bottom: 20px;
-    }
-    h1 {
-      color: white;
-      font-size: 2em;
-    }
-    span.highlight {
-      color: orange;
-    }
+    body { font-family: 'Poppins',sans-serif; background: #f8f8ff; margin:0; }
+    /* Header */
+    .header { display: flex; align-items: center; padding: 12px 16px; background: #fff; box-shadow: 0 2px 8px #ededed; }
+    .header-logo { font-size: 2em; color: #a63895; font-weight: bold; }
+    .header-search { flex: 1; margin: 0 20px; }
+    .header-search input { width:100%; padding:8px 14px; border-radius: 20px; border: 1px solid #d3c5e8; }
+    .header-icon { margin-left:16px; color: #8f50a7; font-size: 1.3em; cursor:pointer; }
+    /* Categories Horiz. scroll */
+    .categories { display:flex; overflow-x:auto; background:#fff; padding: 10px; gap:18px; }
+    .cat-btn { display: flex; flex-direction:column; align-items:center; min-width:75px; text-align:center; cursor:pointer;}
+    .cat-btn img { width:45px; height:45px; border-radius:50%; }
+    .cat-btn span { font-size:0.95em; color:#333; margin-top:4px; }
+    /* Banner */
+    .banner { margin:16px auto; width:96%; border-radius:14px; overflow:hidden; }
+    .banner img { width:100%; display:block; }
+    /* Offer Zone Grid */
+    .offer-zone-title { margin:22px 15px 10px 15px; font-size:1.2em; font-weight:bold; color: #a63895;}
+    .offer-grid {display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 12px;}
+    .offer-card { background:#fff; border-radius:10px; box-shadow:0 3px 10px #eee; padding:10px 5px; text-align:center; }
+    .offer-sale { font-size: 0.8em; color:#fff; background:#f94449; border-radius:8px; padding:2px 7px; margin-bottom:4px; display:inline-block;}
+    .offer-card img { width:65px; height:80px; object-fit:cover; margin-bottom:6px; border-radius:7px;}
+    .offer-title { font-weight:500; font-size:1em;}
+    /* Footer Navigation */
+    .footer-nav { position:fixed; bottom:0; left:0; width:100%; display:flex; justify-content:space-around; background:#fff; border-top:1px solid #eee; padding:6px 0;}
+    .footer-link { text-align:center; color:#a63895; font-size:1em; }
+    .footer-link i { display:block; font-size:1.3em; }
+    .footer-link span { font-size:0.75em;}
   </style>
 </head>
 <body>
-  <div class="logo-container">
-    <img src="https://yourdomain.com/images/dealdhamaka-logo.png" alt="DealDhamaka Logo">
-    <h1>Welcome to <span class="highlight">DealDhamaka</span></h1>
+  <!-- Header -->
+  <div class="header">
+    <span class="header-logo">dealdhamaka</span>
+    <div class="header-search">
+      <input type="text" placeholder="Search for Products, Brands, Offers...">
+    </div>
+    <span class="header-icon"><i class="fa-regular fa-heart"></i></span>
+    <span class="header-icon"><i class="fa-solid fa-bars"></i></span>
   </div>
-</body>
-</html>
+  
+  <!-- Horizontal Categories -->
+  <div class="categories">
+    <div class="cat-btn"><img src="https://cdn-icons-png.flaticon.com/128/1053/1053255.png"><span>Categories</span></div>
+    <div class="cat-btn"><img src="https://cdn-icons-png.flaticon.com/128/2921/2921826.png"><span>Kurti & Dress</span></div>
+    <div class="cat-btn"><img src="https://cdn-icons-png.flaticon.com/128/2922/2922506.png"><span>Kids & Toys</span></div>
+    <div class="cat-btn"><img src="https://cdn-icons-png.flaticon.com/128/3249/3249877.png"><span>Westernwear</span></div>
+    <div class="cat-btn"><img src="https://cdn-icons-png.flaticon.com/128/2922/2922530.png"><span>Home</span></div>
+  </div>
+  
+  <!-- Banner -->
+  <div class="banner">
+    <img src="https://assetscdn1.paytm.com/images/catalog/view/316046/1687165147753.jpg" alt="Sale Banner">
+  </div>
+  
+  <!-- Offer Zone -->
+  <div class="offer-zone-title">OFFER ZONE <span style="color:red">⚡</span></div>
+  <div class="offer-grid">
+    <div class="offer-card">
+      <span class="offer-sale">SALE ₹99</span>
+      <img src="https://images.meesho.com/images/products/10061620/aa73c_400.jpg" alt="">
+      <div class="offer-title">Kurtis & Suits</div>
+    </div>
+    <div class="offer-card">
+      <span class="offer-sale">SALE 70% OFF</span>
+      <img src="https://rukminim2.flixcart.com/image/612/612/xif0q/shirt/k/c/0/m-st-1044-urbano-fashion-original-imaghg3k2hfjczxr.jpeg" alt="">
+      <div class="offer-title">Men Fashion</div>
+    </div>
+    <div class="offer-card">
+      <span class="offer-sale">SALE ₹149</span>
+      <img src="https://static-01.daraz.pk/p/58a34bc466f56b53c3873e29e91e64bd.jpg" alt="">
+      <div class="offer-title">Footwear</div>
+    </div>
+    <div class="offer-card">
+      <span class="offer-sale">SALE ₹99</span>
+      <img src="https://5.imimg.com/data5/SELLER/Default
+        
