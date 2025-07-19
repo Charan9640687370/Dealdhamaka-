@@ -1,171 +1,191 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DealDhamaka Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f8;
     }
-    header {
-      background-color: #2c3e50;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-      font-size: 1.5rem;
+    .section {
+      @apply bg-white shadow-md rounded-xl p-6 mb-6;
     }
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    .section-title {
+      @apply text-xl font-bold mb-4 text-gray-800;
     }
-    .form-group {
-      margin-bottom: 1rem;
+    .input {
+      @apply w-full border border-gray-300 rounded-md p-2 mb-3;
     }
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+    .button {
+      @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md;
     }
-    input, textarea {
-      width: 100%;
-      padding: 0.7rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+    .edit-button {
+      @apply bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-md;
     }
-    button {
-      background-color: #2980b9;
-      color: white;
-      padding: 0.7rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    button:hover {
-      background-color: #1f6391;
-    }
-    .product-card {
-      background: #f9f9f9;
-      padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-    .product-card img {
-      max-width: 150px;
-      display: block;
-      margin-bottom: 1rem;
-    }
-    .admin-tools {
-      margin-top: 2rem;
-    }
-    .login-screen {
-      max-width: 400px;
-      margin: 5rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    .login-screen input {
-      margin-bottom: 1rem;
+    .delete-button {
+      @apply bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-md;
     }
   </style>
 </head>
-<body><div id="login" class="login-screen">
-  <h2>Admin Login</h2>
-  <input type="password" id="adminPassword" placeholder="Enter Password">
-  <br>
-  <button onclick="validatePassword()">Login</button>
-</div><div id="adminPanel" style="display:none">
-  <header>DealDhamaka Admin Panel</header>
-  <div class="container">
-    <h3>Add New Product</h3>
-    <div class="form-group">
-      <label for="productName">Product Name</label>
-      <input type="text" id="productName">
-    </div>
-    <div class="form-group">
-      <label for="productImage">Product Image</label>
-      <input type="file" id="productImage">
-    </div>
-    <div class="form-group">
-      <label for="productPrice">Price</label>
-      <input type="text" id="productPrice">
-    </div>
-    <div class="form-group">
-      <label for="productDiscount">Discount (%)</label>
-      <input type="text" id="productDiscount">
-    </div>
-    <div class="form-group">
-      <label for="productDesc">Description</label>
-      <textarea id="productDesc"></textarea>
-    </div>
-    <div class="form-group">
-      <label for="affiliateLink">Affiliate Link</label>
-      <input type="text" id="affiliateLink">
-    </div>
-    <button onclick="addProduct()">Add Product</button><div class="admin-tools">
-  <h3>Uploaded Products</h3>
-  <div id="productList"></div>
-</div>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl font-bold text-center text-blue-800 mb-10">DealDhamaka Admin Panel</h1>
 
+    <!-- Login (Only Visible If Not Logged In) -->
+    <div id="login-section" class="section">
+      <h2 class="section-title">Admin Login</h2>
+      <input id="admin-pass" class="input" type="password" placeholder="Enter Admin Password" />
+      <button onclick="login()" class="button">Login</button>
+      <p id="login-error" class="text-red-500 mt-2 hidden">Invalid password. Try again.</p>
+    </div>
+
+    <!-- Main Admin Panel (Visible After Login) -->
+    <div id="admin-panel" class="hidden">
+
+      <!-- Add Product -->
+      <div class="section">
+        <h2 class="section-title">Add Product</h2>
+        <input id="pname" class="input" type="text" placeholder="Product Name" />
+        <input id="pdesc" class="input" type="text" placeholder="Product Description" />
+        <input id="pprice" class="input" type="number" placeholder="Product Price" />
+        <input id="pdiscount" class="input" type="number" placeholder="Product Discount (%)" />
+        <input id="pimage" class="input" type="text" placeholder="Product Image URL" />
+        <input id="plink" class="input" type="text" placeholder="Product Affiliate Link" />
+        <button onclick="addProduct()" class="button">Add Product</button>
+      </div>
+
+      <!-- Product List -->
+      <div class="section">
+        <h2 class="section-title">Product List</h2>
+        <div id="product-list" class="space-y-4"></div>
+      </div>
+
+      <!-- Add Banner -->
+      <div class="section">
+        <h2 class="section-title">Add Banner</h2>
+        <input id="banner-url" class="input" type="text" placeholder="Enter Banner Image URL" />
+        <button onclick="addBanner()" class="button">Add Banner</button>
+        <div id="banner-list" class="mt-4 space-y-2"></div>
+      </div>
+
+      <!-- Customers -->
+      <div class="section">
+        <h2 class="section-title">Customers</h2>
+        <p>Total Customers: <span id="customer-count">0</span></p>
+        <ul id="customer-list" class="list-disc pl-6 mt-3 text-gray-700"></ul>
+      </div>
+
+      <!-- Complaints -->
+      <div class="section">
+        <h2 class="section-title">Complaints</h2>
+        <div id="complaints-list" class="space-y-4"></div>
+      </div>
+    </div>
   </div>
-</div><script>
-  const correctPassword = "charan"; // Change this to your password
 
-  function validatePassword() {
-    const pass = document.getElementById("adminPassword").value;
-    if (pass === correctPassword) {
-      document.getElementById("login").style.display = "none";
-      document.getElementById("adminPanel").style.display = "block";
-    } else {
-      alert("Incorrect Password");
-    }
-  }
+  <script>
+    const adminPassword = "Deal@2025";
 
-  function addProduct() {
-    const name = document.getElementById("productName").value;
-    const price = document.getElementById("productPrice").value;
-    const discount = document.getElementById("productDiscount").value;
-    const desc = document.getElementById("productDesc").value;
-    const link = document.getElementById("affiliateLink").value;
-    const imageInput = document.getElementById("productImage");
+    let products = [];
+    let customers = ["ram@gmail.com", "sita@yahoo.com"];
+    let complaints = [
+      { id: 1, email: "ram@gmail.com", issue: "Product not received", reply: "" },
+      { id: 2, email: "sita@yahoo.com", issue: "Wrong item delivered", reply: "" }
+    ];
 
-    if (!name || !price || !link || !imageInput.files[0]) {
-      alert("Please fill in all fields and select an image.");
-      return;
+    function login() {
+      const pass = document.getElementById('admin-pass').value;
+      if (pass === adminPassword) {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('admin-panel').classList.remove('hidden');
+        loadCustomers();
+        loadComplaints();
+      } else {
+        document.getElementById('login-error').classList.remove('hidden');
+      }
     }
 
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const imageUrl = e.target.result;
-      const productHTML = `
-        <div class="product-card">
-          <img src="${imageUrl}" alt="${name}" />
-          <h4>${name}</h4>
-          <p>${desc}</p>
-          <p><strong>Price:</strong> ₹${price} | <strong>Discount:</strong> ${discount}%</p>
-          <a href="${link}" target="_blank">Buy Now</a>
-        </div>
-      `;
+    function addProduct() {
+      const name = document.getElementById('pname').value;
+      const desc = document.getElementById('pdesc').value;
+      const price = document.getElementById('pprice').value;
+      const discount = document.getElementById('pdiscount').value;
+      const image = document.getElementById('pimage').value;
+      const link = document.getElementById('plink').value;
+      const id = Date.now();
+      products.push({ id, name, desc, price, discount, image, link });
+      displayProducts();
+    }
 
-      document.getElementById("productList").innerHTML += productHTML;
-      document.getElementById("productName").value = "";
-      document.getElementById("productPrice").value = "";
-      document.getElementById("productDiscount").value = "";
-      document.getElementById("productDesc").value = "";
-      document.getElementById("affiliateLink").value = "";
-      document.getElementById("productImage").value = "";
-    };
-    reader.readAsDataURL(imageInput.files[0]);
-  }
-</script></body>
+    function displayProducts() {
+      const container = document.getElementById('product-list');
+      container.innerHTML = '';
+      products.forEach(p => {
+        const div = document.createElement('div');
+        div.className = "p-4 border rounded-md bg-gray-50 shadow-sm";
+        div.innerHTML = `
+          <h3 class="text-lg font-bold">${p.name}</h3>
+          <p>${p.desc}</p>
+          <img src="${p.image}" class="w-32 mt-2" />
+          <p class="mt-2">Price: ₹${p.price} | Discount: ${p.discount}%</p>
+          <p><a href="${p.link}" target="_blank" class="text-blue-600 underline">Affiliate Link</a></p>
+          <button onclick="editProduct(${p.id})" class="edit-button mt-2">Edit</button>
+          <button onclick="deleteProduct(${p.id})" class="delete-button mt-2 ml-2">Delete</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function deleteProduct(id) {
+      products = products.filter(p => p.id !== id);
+      displayProducts();
+    }
+
+    function editProduct(id) {
+      const p = products.find(p => p.id === id);
+      document.getElementById('pname').value = p.name;
+      document.getElementById('pdesc').value = p.desc;
+      document.getElementById('pprice').value = p.price;
+      document.getElementById('pdiscount').value = p.discount;
+      document.getElementById('pimage').value = p.image;
+      document.getElementById('plink').value = p.link;
+      deleteProduct(id);
+    }
+
+    function addBanner() {
+      const bannerUrl = document.getElementById('banner-url').value;
+      const container = document.getElementById('banner-list');
+      const img = document.createElement('img');
+      img.src = bannerUrl;
+      img.className = 'w-full max-w-md rounded-md shadow-md';
+      container.appendChild(img);
+    }
+
+    function loadCustomers() {
+      document.getElementById('customer-count').textContent = customers.length;
+      const list = document.getElementById('customer-list');
+      customers.forEach(c => {
+        const li = document.createElement('li');
+        li.textContent = c;
+        list.appendChild(li);
+      });
+    }
+
+    function loadComplaints() {
+      const list = document.getElementById('complaints-list');
+      list.innerHTML = '';
+      complaints.forEach(c => {
+        const div = document.createElement('div');
+        div.className = "p-4 bg-gray-50 border rounded-md";
+        div.innerHTML = `
+          <p><strong>${c.email}</strong>: ${c.issue}</p>
+          <textarea placeholder="Reply here..." class="input" oninput="complaints.find(x => x.id === ${c.id}).reply = this.value">${c.reply}</textarea>
+        `;
+        list.appendChild(div);
+      });
+    }
+  </script>
+</body>
 </html>
