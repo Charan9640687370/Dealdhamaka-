@@ -1,65 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Admin Panel - DealDhamaka</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
+      font-family: Arial;
+      background-color: #f9f9f9;
       padding: 20px;
     }
-    .admin-form {
+    .admin-box {
       max-width: 600px;
       margin: auto;
       background: white;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px #ccc;
+      border-radius: 10px;
     }
-    input, textarea, button {
+    input, textarea {
       width: 100%;
-      margin: 10px 0;
+      margin-bottom: 15px;
       padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
     }
-    #content { display: none; }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
-
-<script>
-  const password = prompt("Enter admin password:");
-  if (password === "MySecret123") {
-    document.getElementById("content").style.display = "block";
-  } else {
-    alert("Access Denied");
-    window.location.href = "/";
-  }
-</script>
-
-<div id="content">
-  <div class="admin-form">
-    <h2>🛠️ Add New Product to DealDhamaka</h2>
-    <form>
-      <label>Product Name:</label>
-      <input type="text" placeholder="e.g. Redgear Gaming Mouse">
-
-      <label>Image URL:</label>
-      <input type="text" placeholder="https://example.com/image.jpg">
-
-      <label>Affiliate Link:</label>
-      <input type="text" placeholder="https://flipkart.com/your-affiliate-link">
-
-      <label>Product Description:</label>
-      <textarea rows="4" placeholder="Write a short description..."></textarea>
-
-      <button type="submit">Submit</button>
-    </form>
+  <div class="admin-box">
+    <h2>Admin Panel - DealDhamaka</h2>
+    <input type="text" placeholder="Product Name" />
+    <input type="text" placeholder="Product Image URL" />
+    <input type="text" placeholder="Product Price" />
+    <textarea placeholder="Product Description"></textarea>
+    <input type="text" placeholder="Affiliate Link" />
+    <button>Add Product</button>
   </div>
-</div>
-
 </body>
 </html>
