@@ -35,6 +35,14 @@
       background-color: #0056b3;
     }
   </style>
+  <script>
+    // 🔐 PASSWORD PROTECTION
+    const password = prompt("Enter Admin Password:");
+    if (password !== "dealdhamaka123") {
+      alert("Access Denied");
+      window.location.href = "https://charan9640687370.github.io/Dealdhamaka-/";
+    }
+  </script>
 </head>
 <body>
   <div class="admin-box">
@@ -48,10 +56,3 @@
   </div>
 </body>
 </html>
-<script>
-  const secret = prompt("Enter Admin Password:");
-  if (secret !== "myadmin123") {
-    alert("Access Denied");
-    window.location.href = "/";
-  }
-</script>
