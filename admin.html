@@ -1,67 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DealDhamaka Admin Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DealDhamaka Admin Panel</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .login-container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #aaa;
-      width: 300px;
-    }
-    input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .error {
-      color: red;
-      text-align: center;
-    }
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }.login-container, .container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.login-container h2, .container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input[type="password"],
+input[type="text"],
+input[type="number"],
+input[type="file"],
+textarea,
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+button {
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.product {
+  margin-bottom: 20px;
+}
+
   </style>
-</head>
-<body>
-  <div class="login-container">
+</head><body>
+  <div class="login-container" id="loginBox">
     <h2>Admin Login</h2>
-    <input type="password" id="adminPass" placeholder="Enter Password" />
+    <input type="password" id="adminPass" placeholder="Enter Admin Password">
     <button onclick="checkPassword()">Login</button>
     <p class="error" id="errorMsg"></p>
-  </div>
+  </div>  <div class="container" id="adminPanel" style="display: none;">
+    <h1>DealDhamaka - Add Product</h1>
+    <form id="productForm">
+      <input type="text" id="productName" placeholder="Product Name" required>
+      <input type="number" id="price" placeholder="Price (₹)" required>
+      <input type="number" id="discount" placeholder="Discount (%)" required>
+      <textarea id="description" placeholder="Description" rows="4" required></textarea>
+      <input type="file" id="productImage" accept="image/*" required>
+      <button type="submit">Add Product</button>
+    </form>
+    <div id="productList"></div>
+  </div>  <script>
+    const correctPassword = "charan";
 
-  <script>
     function checkPassword() {
-      const correctPassword = "charan@00"; // Change this to your desired password
       const entered = document.getElementById("adminPass").value;
-
       if (entered === correctPassword) {
-        // Redirect to admin panel
-        window.location.href = "admin.html"; // <-- Replace with your actual admin page
+        document.getElementById("loginBox").style.display = 'none';
+        document.getElementById("adminPanel").style.display = 'block';
       } else {
         document.getElementById("errorMsg").innerText = "Wrong Password!";
       }
     }
-  </script>
-</body>
-</html>
+
+    document.getElementById("productForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("productName").value;
+      const price = document.getElementById("price").value;
+      const discount = document.getElementById("discount").value;
+      const description = document.getElementById("description").value;
+      const image = document.getElementById("productImage").files[0];
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const imageUrl = e.target.result;
+        const productDiv = document.createElement("div");
+        productDiv.classList.add("product");
+        productDiv.innerHTML = `
+          <img src="${imageUrl}" alt="${name}" style="max-width:100%; border-radius:8px;"><br>
+          <h3>${name}</h3>
+          <p>₹${price} <strong>(${discount}% OFF)</strong></p>
+          <p>${description}</p>
+          <hr>
+        `;
+        document.getElementById("productList").appendChild(productDiv);
+      };
+      reader.readAsDataURL(image);
+
+      // Reset the form
+      document.getElementById("productForm").reset();
+    });
+  </script></body></html>
