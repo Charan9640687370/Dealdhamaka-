@@ -2,157 +2,135 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel - DealDhamaka</title>
+  <title>DealDhamaka Admin Panel</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
-    h2 { background-color: #007BFF; color: white; padding: 10px; border-radius: 5px; }
-    input, textarea { width: 100%; margin: 5px 0; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
-    button { margin: 10px 5px; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    button:hover { background-color: #218838; }
-    .product, .complaint { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; background: #fff; }
-    .admin-section { display: none; }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f0f0f0; }
+    .login, .admin-panel { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .hidden { display: none; }
+    h2 { color: #333; }
+    input, button, textarea { display: block; width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+    button { background: #007bff; color: white; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .product-card { background: #fff; margin-top: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+    .product-card img { max-width: 100px; height: auto; display: block; margin-bottom: 10px; }
+    .card-actions { display: flex; gap: 10px; }
+    .card-actions button { flex: 1; }
   </style>
 </head>
-<body>  <h2>Admin Login</h2>
-  <input type="password" id="adminPassword" placeholder="Enter Admin Password" />
-  <button onclick="checkPassword()">Login</button>  <div id="adminPanel" class="admin-section">
-    <h2>Welcome to DealDhamaka Admin Panel</h2><button onclick="showSection('addProduct')">➕ Add Product</button>
-<button onclick="showSection('addBanner')">🖼️ Add Banner</button>
-<button onclick="showSection('viewCustomers')">👥 Customers</button>
-<button onclick="showSection('viewComplaints')">📩 Complaints</button>
+<body>
+  <div class="login">
+    <h2>Admin Login</h2>
+    <input type="password" id="adminPassword" placeholder="Enter Admin Password" />
+    <button onclick="login()">Login</button>
+  </div>  <div class="admin-panel hidden">
+    <h2>Admin Panel</h2><button onclick="showAddProductForm()">Add Product</button>
+<button onclick="showAddBannerForm()">Add Banner</button>
+<button onclick="showCustomers()">Customers</button>
+<button onclick="showComplaints()">Complaints</button>
 
-<div id="addProduct" class="admin-section">
-  <h3>Add New Product</h3>
-  <input type="text" id="pname" placeholder="Product Name" />
-  <input type="text" id="pimage" placeholder="Product Image URL" />
-  <input type="text" id="pprice" placeholder="Product Price" />
-  <textarea id="pdesc" placeholder="Product Description"></textarea>
-  <input type="text" id="plink" placeholder="Affiliate Link" />
-  <button onclick="addProduct()">Add Product</button>
+<div id="addProductForm" class="hidden">
+  <h3>Add Product</h3>
+  <input type="text" id="productName" placeholder="Product Name" />
+  <input type="text" id="productImageUrl" placeholder="Image URL" />
+  <input type="text" id="productDiscount" placeholder="Discount (e.g. 25%)" />
+  <textarea id="productDetails" placeholder="Product Details"></textarea>
+  <button onclick="addProduct()">Save Product</button>
 </div>
 
-<div id="addBanner" class="admin-section">
+<div id="addBannerForm" class="hidden">
   <h3>Add Banner</h3>
-  <input type="text" id="bannerUrl" placeholder="Banner Image URL" />
-  <button onclick="addBanner()">Upload Banner</button>
+  <input type="text" id="bannerUrl" placeholder="Enter Banner Image URL" />
+  <button onclick="addBanner()">Save Banner</button>
 </div>
 
-<div id="viewCustomers" class="admin-section">
-  <h3>Website Visitors</h3>
-  <div id="customerList">Loading...</div>
-</div>
-
-<div id="viewComplaints" class="admin-section">
-  <h3>Customer Complaints</h3>
-  <div id="complaintList">Loading complaints...</div>
-</div>
-
-<h3>📦 All Products</h3>
-<div id="productList">Loading products...</div>
+<div id="productList"></div>
+<div id="customerList" class="hidden"></div>
+<div id="complaintList" class="hidden"></div>
 
   </div>  <script>
-    let password = "charancherry@09/09/2007"; // You can change the password here.
+    let password = "charancherry@09/09/2007"; // Change your password here
+    let products = [];
 
-    function checkPassword() {
-      let input = document.getElementById("adminPassword").value;
+    function login() {
+      const input = document.getElementById("adminPassword").value;
       if (input === password) {
-        document.getElementById("adminPanel").style.display = "block";
+        document.querySelector(".login").classList.add("hidden");
+        document.querySelector(".admin-panel").classList.remove("hidden");
+        showProducts();
       } else {
-        alert("Incorrect Password");
+        alert("Wrong password");
       }
     }
 
-    function showSection(id) {
-      document.querySelectorAll(".admin-section").forEach(el => {
-        if (el.id !== "adminPanel") el.style.display = "none";
-      });
-      document.getElementById(id).style.display = "block";
+    function showAddProductForm() {
+      document.getElementById("addProductForm").classList.toggle("hidden");
+    }
+
+    function showAddBannerForm() {
+      document.getElementById("addBannerForm").classList.toggle("hidden");
     }
 
     function addProduct() {
-      const name = document.getElementById("pname").value;
-      const image = document.getElementById("pimage").value;
-      const price = document.getElementById("pprice").value;
-      const desc = document.getElementById("pdesc").value;
-      const link = document.getElementById("plink").value;
-      const id = Date.now();
-      const product = { id, name, image, price, desc, link };
-      let data = JSON.parse(localStorage.getItem("products") || "[]");
-      data.push(product);
-      localStorage.setItem("products", JSON.stringify(data));
-      alert("Product added successfully");
-      displayProducts();
+      const name = document.getElementById("productName").value;
+      const image = document.getElementById("productImageUrl").value;
+      const discount = document.getElementById("productDiscount").value;
+      const details = document.getElementById("productDetails").value;
+      const product = { name, image, discount, details };
+      products.push(product);
+      showProducts();
+      document.getElementById("addProductForm").classList.add("hidden");
     }
 
-    function displayProducts() {
-      let products = JSON.parse(localStorage.getItem("products") || "[]");
-      let html = "";
-      products.forEach(prod => {
-        html += `<div class='product'>
-          <h4>${prod.name}</h4>
-          <img src='${prod.image}' width='100'/><br/>
-          ₹${prod.price}<br/>
-          ${prod.desc}<br/>
-          <a href='${prod.link}' target='_blank'>Buy</a><br/>
-          <button onclick='editProduct(${prod.id})'>Edit</button>
-          <button onclick='deleteProduct(${prod.id})'>Delete</button>
-        </div>`;
+    function showProducts() {
+      const list = document.getElementById("productList");
+      list.innerHTML = "";
+      products.forEach((product, index) => {
+        const div = document.createElement("div");
+        div.className = "product-card";
+        div.innerHTML = `
+          <h4>${product.name}</h4>
+          <img src="${product.image}" alt="Product Image">
+          <p><strong>Discount:</strong> ${product.discount}</p>
+          <p>${product.details}</p>
+          <div class="card-actions">
+            <button onclick="editProduct(${index})">Edit</button>
+            <button onclick="deleteProduct(${index})">Delete Product</button>
+          </div>
+        `;
+        list.appendChild(div);
       });
-      document.getElementById("productList").innerHTML = html;
     }
 
-    function deleteProduct(id) {
-      let data = JSON.parse(localStorage.getItem("products") || "[]");
-      data = data.filter(p => p.id !== id);
-      localStorage.setItem("products", JSON.stringify(data));
-      displayProducts();
+    function editProduct(index) {
+      const product = products[index];
+      document.getElementById("productName").value = product.name;
+      document.getElementById("productImageUrl").value = product.image;
+      document.getElementById("productDiscount").value = product.discount;
+      document.getElementById("productDetails").value = product.details;
+      deleteProduct(index);
+      document.getElementById("addProductForm").classList.remove("hidden");
     }
 
-    function editProduct(id) {
-      let data = JSON.parse(localStorage.getItem("products") || "[]");
-      const prod = data.find(p => p.id === id);
-      const newName = prompt("Edit name", prod.name);
-      const newPrice = prompt("Edit price", prod.price);
-      const newDesc = prompt("Edit description", prod.desc);
-      prod.name = newName;
-      prod.price = newPrice;
-      prod.desc = newDesc;
-      localStorage.setItem("products", JSON.stringify(data));
-      displayProducts();
+    function deleteProduct(index) {
+      products.splice(index, 1);
+      showProducts();
+    }
+
+    function showCustomers() {
+      const div = document.getElementById("customerList");
+      div.classList.toggle("hidden");
+      div.innerHTML = "<h3>Total Customers: 0</h3>"; // Placeholder
+    }
+
+    function showComplaints() {
+      const div = document.getElementById("complaintList");
+      div.classList.toggle("hidden");
+      div.innerHTML = `<h3>Complaints</h3><p>No complaints yet.</p>`; // Placeholder
     }
 
     function addBanner() {
-      const url = document.getElementById("bannerUrl").value;
-      localStorage.setItem("banner", url);
-      alert("Banner added");
+      const banner = document.getElementById("bannerUrl").value;
+      alert("Banner added: " + banner);
     }
-
-    function loadComplaints() {
-      const complaints = JSON.parse(localStorage.getItem("complaints") || "[]");
-      let html = "";
-      complaints.forEach((c, i) => {
-        html += `<div class='complaint'><b>${c.name}</b><br>${c.message}<br>
-        <textarea id='reply${i}' placeholder='Type reply...'></textarea><button onclick='replyTo(${i})'>Reply</button></div>`;
-  });
-  document.getElementById("complaintList").innerHTML = html;
-}
-
-function replyTo(i) {
-  const msg = document.getElementById(`reply${i}`).value;
-  alert("Reply sent: " + msg); // You can integrate email later.
-}
-
-function loadCustomers() {
-  let count = localStorage.getItem("visits") || 0;
-  document.getElementById("customerList").innerText = `${count} customers visited this site.`;
-}
-
-window.onload = () => {
-  displayProducts();
-  loadCustomers();
-  loadComplaints();
-}
-
-  </script>
-</body>
+  </script></body>
 </html>
