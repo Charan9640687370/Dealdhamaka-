@@ -4,59 +4,91 @@
   <title>Admin Panel - DealDhamaka</title>
   <style>
     body {
-      font-family: Arial;
-      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
       padding: 20px;
     }
-    .admin-box {
-      max-width: 600px;
-      margin: auto;
+    #login, #adminPanel {
       background: white;
       padding: 20px;
-      box-shadow: 0 0 10px #ccc;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       border-radius: 10px;
-      display: none; /* Initially hidden */
     }
-    input, textarea {
+    input, textarea, button {
       width: 100%;
-      margin-bottom: 15px;
+      margin-top: 10px;
       padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ddd;
+      font-size: 16px;
     }
     button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      border: none;
+      background: #e91e63;
       color: white;
-      border-radius: 6px;
+      border: none;
       cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
-  <div class="admin-box" id="adminPanel">
-    <h2>Admin Panel - DealDhamaka</h2>
-    <input type="text" placeholder="Product Name" />
-    <input type="text" placeholder="Product Image URL" />
-    <input type="text" placeholder="Product Price" />
-    <textarea placeholder="Product Description"></textarea>
-    <input type="text" placeholder="Affiliate Link" />
-    <button>Add Product</button>
-  </div>
 
-  <script>
-    // 🔐 PASSWORD PROTECTION
-    const password = prompt("Enter Admin Password:");
-    if (password === "dealdhamaka123") {
-      document.getElementById("adminPanel").style.display = "block";
+<div id="login">
+  <h2>Admin Login</h2>
+  <input type="password" id="password" placeholder="Enter Admin Password">
+  <button onclick="checkPassword()">Login</button>
+</div>
+
+<div id="adminPanel" style="display: none;">
+  <h2>Admin Panel - DealDhamaka</h2>
+
+  <input type="text" id="productName" placeholder="Product Name">
+  <input type="text" id="productImage" placeholder="Product Image URL">
+  <input type="text" id="productPrice" placeholder="Product Price">
+  <input type="text" id="productDiscount" placeholder="Discount (%)">
+  <textarea id="productDescription" placeholder="Product Description"></textarea>
+  <input type="text" id="affiliateLink" placeholder="Affiliate Link">
+  <input type="text" id="bannerUrl" placeholder="Banner Image URL">
+
+  <button onclick="submitProduct()">Submit Product</button>
+
+  <p id="output"></p>
+</div>
+
+<script>
+  const correctPassword = "charancherry@09/09/2007"; // <== 
+
+  function checkPassword() {
+    const entered = document.getElementById('password').value;
+    if (entered === correctPassword) {
+      document.getElementById('login').style.display = "none";
+      document.getElementById('adminPanel').style.display = "block";
     } else {
-      alert("❌ Access Denied!");
-      window.location.href = "https://charan9640687370.github.io/Dealdhamaka-/";
+      alert("❌ Incorrect Password!");
     }
-  </script>
+  }
+
+  function submitProduct() {
+    const name = document.getElementById('productName').value;
+    const image = document.getElementById('productImage').value;
+    const price = document.getElementById('productPrice').value;
+    const discount = document.getElementById('productDiscount').value;
+    const desc = document.getElementById('productDescription').value;
+    const link = document.getElementById('affiliateLink').value;
+    const banner = document.getElementById('bannerUrl').value;
+
+    // For now, just show entered data (you can connect to Firebase / Google Sheets later)
+    document.getElementById('output').innerHTML = `
+      ✅ Product Submitted!<br><br>
+      <strong>Name:</strong> ${name}<br>
+      <strong>Image:</strong> <img src="${image}" width="100"><br>
+      <strong>Price:</strong> ₹${price}<br>
+      <strong>Discount:</strong> ${discount}%<br>
+      <strong>Description:</strong> ${desc}<br>
+      <strong>Affiliate Link:</strong> <a href="${link}" target="_blank">Buy Now</a><br>
+      <strong>Banner:</strong> <img src="${banner}" width="200"><br>
+    `;
+  }
+</script>
+
 </body>
 </html>
