@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DealDhamaka Admin Panel</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; }
+    header { background: #000; color: #fff; padding: 1rem; text-align: center; }
+    .admin-panel {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+    input, textarea, button {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    label { font-weight: bold; }
+  </style>
+</head>
+<body><header>
+  <h1>DealDhamaka Admin Panel</h1>
+</header><div class="admin-panel">
+  <h2>Product Upload</h2>
+  <form id="productForm">
+    <label for="productName">Product Name</label>
+    <input type="text" id="productName" name="productName" placeholder="Enter product name"><label for="productImage">Product Image Link</label>
+<input type="url" id="productImage" name="productImage" placeholder="https://example.com/image.jpg">
+
+<label for="productLink">Product Buy Link</label>
+<input type="url" id="productLink" name="productLink" placeholder="https://example.com/buy">
+
+<label for="productDesc">Product Description</label>
+<textarea id="productDesc" name="productDesc" placeholder="Enter product details here..."></textarea>
+
+<button type="submit">Upload Product</button>
+
+  </form>
+</div><script>
+  // Basic authentication for admin
+  const password = prompt("Enter admin password:");
+  if (password !== "YourSecretPassword") {
+    document.body.innerHTML = "<h2 style='text-align:center;color:red;'>Access Denied</h2>";
+  }
+
+  // Handle form submission
+  document.getElementById("productForm")?.addEventListener("submit", function(event) {
+    event.preventDefault();
+    alert("Product uploaded (dummy function). Connect backend to save data.");
+  });
+</script></body>
+</html>
