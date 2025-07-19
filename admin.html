@@ -1,67 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Panel - DealDhamaka</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DealDhamaka Admin Panel</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    #productForm {
-      display: none;
-      margin-top: 20px;
-    }
-    input, textarea {
-      display: block;
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 8px;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #ff4d4d;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #e60000;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f4f4f4; }
+    .hidden { display: none; }
+    .container { background: white; padding: 20px; border-radius: 10px; max-width: 800px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h1, h2 { text-align: center; }
+    input, textarea, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
+    .product { border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin-top: 10px; }
+    .product img { max-width: 100px; display: block; margin-bottom: 5px; }
+    .actions button { margin-right: 5px; }
   </style>
 </head>
-<body>
+<body><div class="container" id="loginContainer">
+  <h1>Admin Login</h1>
+  <input type="password" id="adminPassword" placeholder="Enter Admin Password">
+  <button onclick="checkPassword()">Login</button>
+</div><div class="container hidden" id="adminPanel">
+  <h1>DealDhamaka Admin Panel</h1><button onclick="toggleAddProductForm()">Add The Product</button>
 
-  <h2>🔒 Admin Panel - DealDhamaka</h2>
+  <div id="addProductForm" class="hidden">
+    <input type="text" id="productName" placeholder="Product Name">
+    <input type="text" id="productImage" placeholder="Product Image URL">
+    <input type="text" id="productPrice" placeholder="Product Price">
+    <input type="text" id="productDiscount" placeholder="Discount (e.g. 10%)">
+    <textarea id="productDesc" placeholder="Product Description"></textarea>
+    <input type="text" id="productLink" placeholder="Affiliate Link">
+    <button onclick="addProduct()">Submit</button>
+  </div><button onclick="toggleAddBannerForm()">Add Banner</button>
 
-  <button onclick="toggleForm()">➕ Add Product</button>
-
-  <div id="productForm">
-    <h3>🛒 Add New Product</h3>
-    <form id="addProductForm">
-      <input type="text" placeholder="Product Name" required>
-      <textarea placeholder="Product Description" required></textarea>
-      <input type="text" placeholder="Product Price" required>
-      <input type="text" placeholder="Discount %" required>
-      <input type="url" placeholder="Affiliate Link" required>
-      <input type="url" placeholder="Product Image URL" required>
-      <button type="submit">Submit Product</button>
-    </form>
+  <div id="addBannerForm" class="hidden">
+    <input type="text" id="bannerUrl" placeholder="Banner Image URL">
+    <button onclick="addBanner()">Submit Banner</button>
+  </div>  <h2>Products</h2>
+  <div id="productList"></div>  <h2>Customers <span id="visitorCount">0</span> online</h2>
+  <div id="customerList">
+    <!-- Dynamic content -->
+  </div>  <h2>Complaints</h2>
+  <div id="complaints">
+    <!-- Dynamic content -->
   </div>
+</div><script>
+  const correctPassword = "yourPasswordHere";
 
-  <script>
-    function toggleForm() {
-      const form = document.getElementById('productForm');
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  function checkPassword() {
+    const password = document.getElementById('adminPassword').value;
+    if (password === correctPassword) {
+      document.getElementById('loginContainer').classList.add('hidden');
+      document.getElementById('adminPanel').classList.remove('hidden');
+    } else {
+      alert("Incorrect password");
     }
+  }
 
-    // (Optional) Handle form submission
-    document.getElementById('addProductForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      alert("Product added (you can connect this to your backend or spreadsheet).");
-      this.reset();
-    });
-  </script>
+  function toggleAddProductForm() {
+    document.getElementById('addProductForm').classList.toggle('hidden');
+  }
 
-</body>
+  function toggleAddBannerForm() {
+    document.getElementById('addBannerForm').classList.toggle('hidden');
+  }
+
+  function addProduct() {
+    const name = document.getElementById('productName').value;
+    const image = document.getElementById('productImage').value;
+    const price = document.getElementById('productPrice').value;
+    const discount = document.getElementById('productDiscount').value;
+    const desc = document.getElementById('productDesc').value;
+    const link = document.getElementById('productLink').value;
+
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `
+      <img src="${image}" alt="${name}">
+      <h3>${name}</h3>
+      <p>${desc}</p>
+      <p>Price: ₹${price} (${discount} off)</p>
+      <a href="${link}" target="_blank">Buy Now</a><br>
+      <div class="actions">
+        <button onclick="editProduct(this)">Edit</button>
+        <button onclick="deleteProduct(this)">Delete The Product</button>
+      </div>
+    `;
+    document.getElementById('productList').appendChild(div);
+    document.getElementById('addProductForm').classList.add('hidden');
+  }
+
+  function deleteProduct(btn) {
+    if (confirm("Are you sure you want to delete this product?")) {
+      btn.closest('.product').remove();
+    }
+  }
+
+  function editProduct(btn) {
+    const product = btn.closest('.product');
+    const name = prompt("Edit Product Name", product.querySelector('h3').innerText);
+    const desc = prompt("Edit Description", product.querySelector('p').innerText);
+    const price = prompt("Edit Price", product.querySelectorAll('p')[1].innerText);
+    const link = prompt("Edit Link", product.querySelector('a').href);
+    if (name && desc && price && link) {
+      product.querySelector('h3').innerText = name;
+      product.querySelectorAll('p')[0].innerText = desc;
+      product.querySelectorAll('p')[1].innerText = price;
+      product.querySelector('a').href = link;
+    }
+  }
+
+  function addBanner() {
+    const bannerUrl = document.getElementById('bannerUrl').value;
+    alert("Banner added: " + bannerUrl);
+    document.getElementById('addBannerForm').classList.add('hidden');
+  }
+
+  // Fake real-time data demo (for visitors and complaints)
+  setInterval(() => {
+    document.getElementById('visitorCount').innerText = Math.floor(Math.random() * 100);
+  }, 3000);
+</script></body>
 </html>
