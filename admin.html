@@ -3,143 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Login - DealDhamaka</title>
+  <title>Admin Panel - DealDhamaka</title>
   <style>
     body {
       margin: 0;
       padding: 0;
       background: linear-gradient(135deg, #1e3c72, #2a5298);
       font-family: 'Segoe UI', sans-serif;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .login-box {
-      background: white;
+    .box {
+      background: #fff;
       padding: 40px;
       border-radius: 16px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .login-box h2 {
-      margin-bottom: 24px;
-      color: #2a5298;
-    }
-
-    input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      margin: 12px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      background: #2a5298;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      width: 100%;
-    }
-
-    .error {
-      color: red;
-      margin-top: 12px;
-      font-weight: bold;
-    }
-
-    .success {
-      color: green;
-      margin-top: 12px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <div class="login-box">
-    <h2>Admin Login</h2>
-    <input type="password" id="passwordInput" placeholder="Enter Admin Password" />
-    <button onclick="checkPassword()">Login</button>
-    <div id="message"></div>
-  </div>
-
-  <script>
-    function checkPassword() {
-      const correctPassword = "charan"; // ఇది నీ password
-      const enteredPassword = document.getElementById("passwordInput").value;
-      const message = document.getElementById("message");
-
-      if (enteredPassword === correctPassword) {
-        message.innerHTML = "<div class='success'>✅ Welcome to Admin Panel!</div>";
-        // Redirect if needed: window.location.href = "dashboard.html";
-      } else {
-        message.innerHTML = "<div class='error'>❌ Incorrect Password</div>";
-      }
-    }
-  </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Product - Admin Panel</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(120deg, #1e3c72, #2a5298);
-      font-family: 'Segoe UI', sans-serif;
-      color: #333;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding-top: 40px;
-    }
-
-    .container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 20px;
       width: 95%;
       max-width: 600px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
 
     h2 {
       text-align: center;
       color: #2a5298;
-      margin-bottom: 30px;
+      margin-bottom: 24px;
     }
 
     label {
       display: block;
-      margin-bottom: 8px;
+      margin: 12px 0 6px;
       font-weight: bold;
     }
 
-    input[type="text"],
-    input[type="number"],
-    input[type="url"],
-    input[type="file"],
-    textarea {
+    input, textarea {
       width: 100%;
       padding: 12px;
-      margin-bottom: 20px;
+      font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 10px;
-      font-size: 16px;
+      margin-bottom: 16px;
     }
 
     textarea {
@@ -150,11 +54,11 @@
     button {
       background: #2a5298;
       color: white;
-      padding: 14px 20px;
+      padding: 14px;
       border: none;
       border-radius: 10px;
+      font-size: 16px;
       cursor: pointer;
-      font-size: 18px;
       width: 100%;
       transition: 0.3s;
     }
@@ -163,26 +67,36 @@
       background: #1e3c72;
     }
 
-    .message {
-      margin-top: 20px;
-      text-align: center;
+    .error {
+      color: red;
       font-weight: bold;
+      text-align: center;
+      margin-top: 10px;
     }
 
     .success {
       color: green;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 10px;
     }
 
-    .error {
-      color: red;
+    #addProductForm {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h2>Add Product</h2>
+  <div class="box" id="loginBox">
+    <h2>Admin Login</h2>
+    <input type="password" id="passwordInput" placeholder="Enter Admin Password" />
+    <button onclick="checkPassword()">Login</button>
+    <div id="loginMessage"></div>
+  </div>
 
+  <div class="box" id="addProductForm">
+    <h2>Add Product</h2>
     <form id="productForm">
       <label for="name">Product Name:</label>
       <input type="text" id="name" required />
@@ -204,11 +118,23 @@
 
       <button type="submit">Add Product</button>
     </form>
-
-    <div class="message" id="msg"></div>
+    <div id="productMessage"></div>
   </div>
 
   <script>
+    function checkPassword() {
+      const correctPassword = "charan"; // ✅ ఇది నీ పాస్వర్డ్
+      const enteredPassword = document.getElementById("passwordInput").value;
+      const message = document.getElementById("loginMessage");
+
+      if (enteredPassword === correctPassword) {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("addProductForm").style.display = "block";
+      } else {
+        message.innerHTML = "<div class='error'>❌ Incorrect Password</div>";
+      }
+    }
+
     document.getElementById("productForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
@@ -218,17 +144,14 @@
       const discount = document.getElementById("discount").value;
       const desc = document.getElementById("desc").value.trim();
       const link = document.getElementById("link").value.trim();
-      const msg = document.getElementById("msg");
+      const msg = document.getElementById("productMessage");
 
       if (!name || !image || !price || !desc || !link) {
         msg.innerHTML = "<div class='error'>❌ Please fill all required fields</div>";
         return;
       }
 
-      // Show success for now
       msg.innerHTML = "<div class='success'>✅ Product added successfully (not saved yet)</div>";
-
-      // Clear form
       document.getElementById("productForm").reset();
     });
   </script>
