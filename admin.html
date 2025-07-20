@@ -1,124 +1,90 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DealDhamaka Admin Panel</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login - DealDhamaka</title>
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-    }
-    header {
-      background-color: #1e88e5;
-      color: white;
-      padding: 15px 20px;
-      font-size: 1.5em;
-    }
-    nav {
-      background-color: #1565c0;
-      color: white;
+      padding: 0;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
       display: flex;
-      justify-content: space-around;
-      padding: 10px;
+      align-items: center;
+      justify-content: center;
     }
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
+
+    .login-box {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
     }
-    .container {
-      padding: 20px;
+
+    .login-box h2 {
+      margin-bottom: 24px;
+      color: #2a5298;
     }
-    .form-section {
-      background-color: white;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    input, textarea, select {
+
+    input[type="password"] {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
+      padding: 12px;
+      margin: 12px 0;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 8px;
+      font-size: 16px;
     }
+
     button {
-      padding: 10px 20px;
-      background-color: #1e88e5;
+      background: #2a5298;
       color: white;
+      padding: 12px 20px;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 16px;
+      width: 100%;
     }
-    button:hover {
-      background-color: #0d47a1;
+
+    .error {
+      color: red;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    .success {
+      color: green;
+      margin-top: 12px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <header>DealDhamaka Admin Panel</header>  <nav>
-    <a href="#add-product">Add Product</a>
-    <a href="#customers">Customers</a>
-    <a href="#complaints">Complaints</a>
-    <a href="#add-banner">Add Banner</a>
-    <a href="#login">Login</a>
-  </nav>  <div class="container">
-    <div id="add-product" class="form-section">
-      <h2>Add Product</h2>
-      <form>
-        <label for="product-name">Product Name</label>
-        <input type="text" id="product-name" name="product-name"><label for="product-image">Product Image</label>
-    <input type="file" id="product-image" name="product-image">
-
-    <label for="affiliate-link">Affiliate Link</label>
-    <input type="text" id="affiliate-link" name="affiliate-link">
-
-    <label for="discount">Discount (%)</label>
-    <input type="number" id="discount" name="discount">
-
-    <button type="submit">Add Product</button>
-  </form>
-</div>
-
-<div id="customers" class="form-section">
-  <h2>Customers</h2>
-  <p>List of all registered users will appear here.</p>
-</div>
-
-<div id="complaints" class="form-section">
-  <h2>Customer Complaints</h2>
-  <p>All user complaints will be listed here with option to reply.</p>
-</div>
-
-<div id="add-banner" class="form-section">
-  <h2>Add Banner</h2>
-  <form>
-    <label for="banner-image">Upload Banner Image</label>
-    <input type="file" id="banner-image" name="banner-image">
-    <button type="submit">Add Banner</button>
-  </form>
-</div>
-
-<div id="login" class="form-section">
-  <h2>Admin Login</h2>
-  <form>
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username">
-
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password">
-
-    <button type="submit">Login</button>
-  </form>
-</div>
-
+  <div class="login-box">
+    <h2>Admin Login</h2>
+    <input type="password" id="passwordInput" placeholder="Enter Admin Password" />
+    <button onclick="checkPassword()">Login</button>
+    <div id="message"></div>
   </div>
+
+  <script>
+    function checkPassword() {
+      const correctPassword = "charan"; // ఇది నీ password
+      const enteredPassword = document.getElementById("passwordInput").value;
+      const message = document.getElementById("message");
+
+      if (enteredPassword === correctPassword) {
+        message.innerHTML = "<div class='success'>✅ Welcome to Admin Panel!</div>";
+        // Redirect if needed: window.location.href = "dashboard.html";
+      } else {
+        message.innerHTML = "<div class='error'>❌ Incorrect Password</div>";
+      }
+    }
+  </script>
 </body>
 </html>
